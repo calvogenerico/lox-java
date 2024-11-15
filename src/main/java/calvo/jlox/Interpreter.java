@@ -1,7 +1,5 @@
 package calvo.jlox;
 
-import static calvo.jlox.TokenType.PLUS;
-
 public class Interpreter implements Expr.Visitor<Object> {
   void interpret(Expr expression) {
     try {
@@ -51,7 +49,7 @@ public class Interpreter implements Expr.Visitor<Object> {
         return (double) left <= (double) right;
       case PLUS:
         if (left instanceof String && right instanceof String) {
-          return (String) left + (String) right;
+          return left + (String) right;
         } else if (left instanceof Double && right instanceof Double) {
           return (double) left + (double) right;
         }
