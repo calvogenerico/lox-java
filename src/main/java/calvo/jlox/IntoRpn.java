@@ -28,4 +28,9 @@ public class IntoRpn implements Expr.Visitor<String> {
   public String visitUnaryExpr(Expr.Unary expr) {
     return String.format("%s %s", expr.right.accept(this), expr.operator.lexeme);
   }
+
+  @Override
+  public String visitVariableExpr(Expr.Variable expr) {
+    return "";
+  }
 }

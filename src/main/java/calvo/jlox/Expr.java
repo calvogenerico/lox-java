@@ -2,15 +2,31 @@ package calvo.jlox;
 
 import java.util.List;
 
-abstract public class Expr {
+abstract class Expr {
   interface Visitor<R> {
+    R visitAssignExpr(Assign expr);
     R visitBinaryExpr(Binary expr);
     R visitGroupingExpr(Grouping expr);
     R visitLiteralExpr(Literal expr);
     R visitUnaryExpr(Unary expr);
+    R visitVariableExpr(Variable expr);
+  }
+  public static class Assign extends Expr {
+    Assign(Token name, Expr value) {
+      this.name = name;
+      this.value = value;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitAssignExpr(this);
+    }
+
+    final Token name;
+    final Expr value;
   }
   public static class Binary extends Expr {
-    public Binary(Expr left, Token operator, Expr right) {
+    Binary(Expr left, Token operator, Expr right) {
       this.left = left;
       this.operator = operator;
       this.right = right;
@@ -26,7 +42,7 @@ abstract public class Expr {
     final Expr right;
   }
   public static class Grouping extends Expr {
-    public Grouping(Expr expression) {
+    Grouping(Expr expression) {
       this.expression = expression;
     }
 
@@ -38,7 +54,7 @@ abstract public class Expr {
     final Expr expression;
   }
   public static class Literal extends Expr {
-    public Literal(Object value) {
+    Literal(Object value) {
       this.value = value;
     }
 
@@ -50,7 +66,7 @@ abstract public class Expr {
     final Object value;
   }
   public static class Unary extends Expr {
-    public Unary(Token operator, Expr right) {
+    Unary(Token operator, Expr right) {
       this.operator = operator;
       this.right = right;
     }
@@ -62,6 +78,18 @@ abstract public class Expr {
 
     final Token operator;
     final Expr right;
+  }
+  public static class Variable extends Expr {
+    Variable(Token name) {
+      this.name = name;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitVariableExpr(this);
+    }
+
+    final Token name;
   }
 
   abstract <R> R accept(Visitor<R> visitor);
