@@ -1,7 +1,5 @@
 package calvo.jlox;
 
-import java.util.Arrays;
-
 public class IntoRpn implements Expr.Visitor<String> {
   public String print(Expr expr) {
     return expr.accept(this);
@@ -27,6 +25,11 @@ public class IntoRpn implements Expr.Visitor<String> {
   @Override
   public String visitUnaryExpr(Expr.Unary expr) {
     return String.format("%s %s", expr.right.accept(this), expr.operator.lexeme);
+  }
+
+  @Override
+  public String visitAssignExpr(Expr.Assign expr) {
+    return "";
   }
 
   @Override
