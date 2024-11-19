@@ -50,12 +50,26 @@ public class Parser {
 
   private Stmt statement() {
     if (match(PRINT)) return printStatement();
+    if (match(LEFT_BRACE)) return new Stmt.Block(block());
 
     return expressionStatement();
   }
 
+  private List<Stmt> block() {
+    List<Stmt> statements = new ArrayList<>();
+
+    while (!check(RIGHT_BRACE) && !isAtEnd()) {
+      statements.add(declaration());
+    }
+
+    consume(RIGHT_BRACE, "Expect '}' after block.");
+    return statements;
+  }
+
   private Stmt expressionStatement() {
-    return null;
+    Expr expr = expression();
+    consume(SEMICOLON, "Expect ';' after expression.");
+    return new Stmt.Expression(expr);
   }
 
   private Stmt printStatement() {
@@ -80,7 +94,7 @@ public class Parser {
         return new Expr.Assign(name, value);
       }
 
-      throw error(equals, "Invalid assignment target.");
+      throw error (equals, "Invalid assignment target.");
     }
 
     return expr;
