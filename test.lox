@@ -1,6 +1,1 @@
-var a = true;
-if (a) {
-    print a;
-} else {
-    print "else";
-}
+print 10 or (1/0);

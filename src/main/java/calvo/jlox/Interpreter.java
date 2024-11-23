@@ -78,6 +78,9 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return (double) left * (double) right;
       case SLASH:
         checkNumberOperands(expr.operator, left, right);
+        if (right.equals((double) 0)) {
+          throw new RuntimeError(expr.operator, "Cannot divide by zero.");
+        }
         return (double) left / (double) right;
       case BANG_EQUAL:
         return !isEqual(left, right);
@@ -103,6 +106,29 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
   @Override
   public Object visitLiteralExpr(Expr.Literal expr) {
     return expr.value;
+  }
+
+  @Override
+  public Object visitLogicalExpr(Expr.Logical expr) {
+    Object left = evaluate(expr.left);
+
+    return switch (expr.operator.type) {
+      case AND -> {
+        if (isTruthy(left)) {
+          yield evaluate(expr.right);
+        }  else {
+          yield left;
+        }
+      }
+      case OR -> {
+        if (isTruthy(left)) {
+          yield left;
+        } else {
+          yield evaluate(expr.right);
+        }
+      }
+      default -> throw new RuntimeError(expr.operator, "Unknown operator.");
+    };
   }
 
   @Override
