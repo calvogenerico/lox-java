@@ -1,7 +1,6 @@
 package calvo.jlox;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
   final Environment globals = new Environment();

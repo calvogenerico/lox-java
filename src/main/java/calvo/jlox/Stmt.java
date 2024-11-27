@@ -2,7 +2,7 @@ package calvo.jlox;
 
 import java.util.List;
 
-abstract class Stmt {
+public abstract class Stmt {
   interface Visitor<R> {
     R visitBlockStmt(Block stmt);
     R visitExpressionStmt(Expression stmt);

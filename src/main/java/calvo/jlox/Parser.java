@@ -59,6 +59,7 @@ public class Parser {
     if (!match(LEFT_PAREN)) {
       do {
         if (params.size() >= 255) {
+          //noinspection ThrowableNotThrown
           error(peek(), "Can't have more than 255 parameters.");
         }
 
@@ -297,6 +298,7 @@ public class Parser {
     if (!check(RIGHT_PAREN)) {
       do {
         if (args.size() >= 255) {
+          //noinspection ThrowableNotThrown
           error(peek(), "Can't have more than 255 arguments.");
         }
         args.add(expression());
