@@ -10,6 +10,11 @@ public class IntoRpn implements Expr.Visitor<String> {
     return String.format("%s %s %s", expr.left.accept(this), expr.right.accept(this), expr.operator.lexeme);
   }
 
+  @Override
+  public String visitCallExpr(Expr.Call expr) {
+    return "";
+  }
+
 
   @Override
   public String visitGroupingExpr(Expr.Grouping expr) {

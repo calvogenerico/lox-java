@@ -1,9 +1,32 @@
 package calvo.jlox;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
-  private Environment environment = new Environment();
+  final Environment globals = new Environment();
+  private Environment environment = new Environment(globals);
+
+
+  Interpreter() {
+    globals.define("clock", new LoxCallable() {
+      @Override
+      public int arity() {
+        return 0;
+      }
+
+      @Override
+      public Object call(Interpreter interpreter,
+                         List<Object> arguments) {
+        return (double) System.currentTimeMillis() / 1000.0;
+      }
+
+      @Override
+      public String toString() {
+        return "<native fn>";
+      }
+    });
+  }
 
   void interpret(List<Stmt> statements) {
     try {
@@ -91,6 +114,18 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     return null;
   }
 
+  @Override
+  public Object visitCallExpr(Expr.Call expr) {
+    Object callee = expr.callee.accept(this);
+    if (!(callee instanceof LoxCallable fn)) {
+      throw new RuntimeError(expr.paren,
+        "Can only call functions and classes.");
+    }
+
+    List<Object> arguments = expr.arguments.stream().map(arg -> arg.accept(this)).toList();
+    return fn.call(this, arguments);
+  }
+
   private boolean isEqual(Object left, Object right) {
     if (left == null && right == null) return true;
     if (left == null) return false;
@@ -116,7 +151,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
       case AND -> {
         if (isTruthy(left)) {
           yield evaluate(expr.right);
-        }  else {
+        } else {
           yield left;
         }
       }
