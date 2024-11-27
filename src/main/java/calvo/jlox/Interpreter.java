@@ -123,6 +123,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     List<Object> arguments = expr.arguments.stream().map(arg -> arg.accept(this)).toList();
+
+    if (arguments.size() != fn.arity()) {
+      throw new RuntimeError(expr.paren, "Expected " + fn.arity() + " arguments but got " + arguments.size() + ".");
+    }
+
     return fn.call(this, arguments);
   }
 
