@@ -238,7 +238,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
   @Override
   public Void visitFunctionStmt(Stmt.Function stmt) {
-    LoxFunction fn = new LoxFunction(stmt);
+    LoxFunction fn = new LoxFunction(stmt, this.environment);
     environment.define(stmt.name.lexeme, fn);
     return null;
   }
@@ -258,6 +258,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     Object value = evaluate(stmt.expression);
     System.out.println(stringify(value));
     return null;
+  }
+
+  @Override
+  public Void visitReturnStmt(Stmt.Return stmt) {
+    Object value = null;
+    if (stmt.value != null) value = evaluate(stmt.value);
+
+    throw new ValueReturned(value);
   }
 
   @Override

@@ -1,9 +1,5 @@
-fun plusOne(a) {
-  print a + 1;
+fun doubleThis(n) {
+    return n * 2;
 }
 
-fun applyFn(a, b) {
-  b(a);
-}
-
-applyFn(10, plusOne);
+print doubleThis(10);
