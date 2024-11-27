@@ -173,16 +173,17 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
   @Override
   public Object visitUnaryExpr(Expr.Unary expr) {
     Object right = evaluate(expr.right);
-    switch (expr.operator.type) {
-      case MINUS:
+    return switch (expr.operator.type) {
+      case MINUS -> {
         checkNumberOperand(expr.operator, right);
-        return -(double) right;
-      case BANG:
-        return !isTruthy(right);
-    }
+        yield -(double) right;
+      }
+      case BANG -> !isTruthy(right);
+      default ->
+        // Unreachable.
+        null;
+    };
 
-    // Unreachable.
-    return null;
   }
 
   @Override
