@@ -56,7 +56,7 @@ public class Parser {
 
     ArrayList<Token> params = new ArrayList<>();
 
-    if (!match(LEFT_PAREN)) {
+    if (!match(RIGHT_PAREN)) {
       do {
         if (params.size() >= 255) {
           //noinspection ThrowableNotThrown
