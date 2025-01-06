@@ -2,6 +2,7 @@ package calvo.jlox;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Environment {
   private final Environment enclosing;
@@ -42,5 +43,24 @@ public class Environment {
       throw new RuntimeError(name,
         "Undefined variable '" + name.lexeme + "'.");
     }
+  }
+
+  public Object getAt(Integer distance, String name) {
+    return ancestor(distance).values.get(name);
+  }
+
+  private Environment ancestor(Integer distance) {
+    Environment environment = this;
+    for (int i = 0; i < distance; i++) {
+      // This is not needed but makes the linter happy.
+      assert environment != null;
+      environment = environment.enclosing;
+    }
+
+    return environment;
+  }
+
+  public void assignAt(Integer distance, Token name, Object value) {
+    ancestor(distance).values.put(name.lexeme, value);
   }
 }
