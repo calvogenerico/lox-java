@@ -15,6 +15,11 @@ public class IntoRpn implements Expr.Visitor<String> {
     return "";
   }
 
+  @Override
+  public String visitGetExpr(Expr.Get expr) {
+    return "";
+  }
+
 
   @Override
   public String visitGroupingExpr(Expr.Grouping expr) {
@@ -29,6 +34,11 @@ public class IntoRpn implements Expr.Visitor<String> {
 
   @Override
   public String visitLogicalExpr(Expr.Logical expr) {
+    return "";
+  }
+
+  @Override
+  public String visitSetExpr(Expr.Set expr) {
     return "";
   }
 
